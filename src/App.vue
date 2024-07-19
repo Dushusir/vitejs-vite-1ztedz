@@ -1,30 +1,56 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div id="app">
+    <div>
+      <button @click="getData" title="print current workbook data to console">Get Data</button>
+      <button @click="destroy">destroy</button>
+      <button @click="show">show</button>
+
+    </div>
+    <UniverSheet v-if="isShow" id="sheet" ref="univerRef" :data="data" />
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<script setup lang="ts">
+import UniverSheet from './components/UniverSheet.vue'
+import { DEFAULT_WORKBOOK_DATA } from './assets/default-workbook-data'
+import { ref } from 'vue';
+
+const data = ref(DEFAULT_WORKBOOK_DATA);
+const univerRef = ref<InstanceType<typeof UniverSheet> | null>(null);
+const isShow = ref(true);
+
+const getData = () => {
+  const result = univerRef.value?.getData();
+  console.log(JSON.stringify(result, null, 2));
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+
+const destroy = () => {
+  isShow.value = false;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+const show = () => {
+  isShow.value = true;
+}
+
+</script>
+
+<style>
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#app {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+}
+
+#sheet {
+  /** The height of the Union uses the height of the parent container */
+  flex: 1;
 }
 </style>
